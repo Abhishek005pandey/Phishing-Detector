@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Phishing URL Detector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Simple Bootstrap CDN for pleasant UI -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body { padding-top: 40px; background: #f7fafc; }
+      .card { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+      pre { white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-9">
+          <h1 class="mb-3 text-center">Phishing URL Detector</h1>
+          <div class="card mb-3 p-3">
+            <form method="post" class="row g-2">
+              <div class="col-md-10">
+                <input name="url" class="form-control" placeholder="Paste URL here (e.g., http://example.com/login)" autofocus>
+              </div>
+              <div class="col-md-2 d-grid">
+                <button class="btn btn-primary" type="submit">Analyze</button>
+              </div>
+            </form>
+            {% if error %}
+              <div class="alert alert-warning mt-3">{{ error }}</div>
+            {% endif %}
+          </div>
+
+          {% if result %}
+          <div class="card p-3 mb-3">
+            <h5>Final verdict: <span class="badge 
+              {% if result.final_label == 'phishing' %}bg-danger
+              {% elif result.final_label == 'suspicious' %}bg-warning text-dark
+              {% else %}bg-success{% endif %}">{{ result.final_label|upper }}</span></h5>
+            <p>Final score: <strong>{{ result.final_score }}</strong></p>
+            <hr>
+            <h6>Heuristics output</h6>
+            <pre>{{ result.heuristics | tojson(indent=2) }}</pre>
+            <hr>
+            <h6>ML output</h6>
+            <p>ML label: <strong>{{ result.ml_label }}</strong> — probability: <strong>{{ '%.3f' % result.ml_prob if result.ml_prob is not none else 'n/a' }}</strong></p>
+            <hr>
+            <h6>Full JSON</h6>
+            <pre>{{ result | tojson(indent=2) }}</pre>
+          </div>
+          {% endif %}
+
+          <div class="text-muted small">
+            <p>Notes: Heuristics + ML are combined with a simple fusion rule: <code>final_score = heur_score + ml_prob * 30</code>. Tune thresholds in <code>app.py</code> or in your model training for different sensitivity.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

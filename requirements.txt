@@ -1,0 +1,8 @@
+requests
+python-whois
+tldextract
+beautifulsoup4
+pandas
+scikit-learn
+joblib
+

@@ -1,0 +1,4 @@
+http://example.com
+https://www.google.com
+http://login-paypal.example.tk/verify
+http://192.0.2.1/secure-login

@@ -1,0 +1,10 @@
+http://login-paypal.test/verify
+http://secure-paypal-login.test/account
+http://192.0.2.123/secure-login
+http://google.com.account-security-updates-login.test
+http://paypal-login-update-security.test/verify?token=5f4dcc3b5aa765d61d8327deb882cf99abcdef1234567890
+http://user@verify-account.test/login
+http://update-bank-info.test/confirm?acct=123456789012
+http://a.b.c.d.e.login-paypal.test/confirm
+http://free-gift-card-offer.test/redeem
+http://verify-paypal.security-check.test/login

@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Phishing URL Detector</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;padding:20px;background:#f3f6fb}
+    .card{background:#fff;border-radius:12px;padding:18px;max-width:900px;margin:20px auto;box-shadow:0 8px 24px rgba(20,30,50,0.06)}
+    input{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
+    button{margin-top:10px;padding:10px 16px;border-radius:8px;border:none;background:#0066cc;color:#fff;cursor:pointer}
+    pre{background:#f7fafc;padding:10px;border-radius:8px;overflow:auto}
+    .label{font-weight:700;padding:6px 10px;border-radius:8px;display:inline-block}
+    .benign{background:#e6fff2;color:#1b7a43}
+    .suspicious{background:#fff4e5;color:#a45f00}
+    .phishing{background:#ffecec;color:#c02020}
+    .meta{color:#666;font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Phishing URL Detector</h2>
+    <p class="meta">Paste a URL below and press <strong>Check</strong>.</p>
+
+    <input id="url" placeholder="https://example.com/login" />
+    <div style="display:flex;gap:8px">
+      <button onclick="check()">Check</button>
+      <button onclick="clearAll()" style="background:#777">Clear</button>
+    </div>
+
+    <div id="status" style="margin-top:12px"></div>
+
+    <div id="result" style="margin-top:16px"></div>
+  </div>
+
+<script>
+const API = (location.hostname === '127.0.0.1' || location.hostname === 'localhost') 
+            ? 'http://127.0.0.1:5000/predict'
+            : '/predict';
+
+function clearAll(){
+  document.getElementById('url').value='';
+  document.getElementById('status').innerHTML='';
+  document.getElementById('result').innerHTML='';
+}
+
+async function check(){
+  const url = document.getElementById('url').value.trim();
+  if(!url){ alert('Enter a URL'); return; }
+  document.getElementById('status').innerText = 'Checking...';
+  document.getElementById('result').innerHTML = '';
+
+  try{
+    const r = await fetch(API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({url})
+    });
+    if(!r.ok){
+      const txt = await r.text();
+      throw new Error('Server returned ' + r.status + ' — ' + txt);
+    }
+    const data = await r.json();
+
+    // if your /predict returns only label/probability, fetch details endpoint:
+    let full = data;
+    if(!data.heuristics && data.url && window.fetch){
+      // try an analyze endpoint that returns full analysis (optional)
+      try{
+        const a = await fetch('/analyze', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({url})
+        });
+        if(a.ok){
+          full = await a.json();
+          // keep ML data if predict separate
+          if(data.label) full.ml = {label:data.label, probability:data.probability};
+        }
+      }catch(e){}
+    }
+
+    renderResult(full);
+  }catch(err){
+    document.getElementById('status').innerText = 'Error: ' + err.message;
+  }
+}
+
+function renderResult(d){
+  document.getElementById('status').innerHTML = '';
+  let label = (d.label || (d.ml && d.ml.label) || 'unknown').toLowerCase();
+  let prob = d.probability ?? (d.ml && d.ml.probability) ?? null;
+  let cls = 'benign'; if(label==='phishing') cls='phishing'; else if(label==='suspicious') cls='suspicious';
+
+  let html = `<div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="label ${cls}">${(label || 'N/A').toUpperCase()}</div>
+      <div style="font-size:14px">Score: <strong>${d.score ?? 'n/a'}</strong></div>
+      <div style="margin-left:auto;color:#666">${new Date().toLocaleString()}</div>
+    </div>
+    <p style="margin:8px 0"><strong>URL:</strong> ${d.url}</p>
+    <p style="margin:6px 0"><strong>Probability:</strong> ${prob!==null ? ( (prob*100).toFixed(2)+'%' ) : 'n/a'}</p>
+    <hr/>
+    <h4 style="margin:6px 0">Heuristics</h4>
+    <pre>${JSON.stringify(d.heuristics ?? d, null, 2)}</pre>
+    <h4 style="margin:6px 0">Detailed Analysis</h4>
+    <pre>${JSON.stringify(d, null, 2)}</pre>
+  </div>`;
+
+  document.getElementById('result').innerHTML = html;
+}
+</script>
+</body>
+</html>

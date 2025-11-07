@@ -1,0 +1,126 @@
+[
+  {
+    "url": "http://example.com",
+    "score": 0,
+    "label": "benign",
+    "reasons": [],
+    "features": {
+      "original_url": "http://example.com",
+      "scheme": "http",
+      "hostname": "example.com",
+      "domain": "example.com",
+      "subdomain": "",
+      "path": "",
+      "path_len": 0,
+      "path_segments": 0,
+      "query": "",
+      "query_len": 0,
+      "num_query_params": 0,
+      "is_ip": false,
+      "url_len": 18
+    },
+    "whois_age_days": null,
+    "active": {
+      "final_url": "http://example.com/",
+      "status_code": 200,
+      "redirect_chain": [
+        "http://example.com/"
+      ],
+      "contains_form": false,
+      "error": null
+    }
+  },
+  {
+    "url": "https://www.google.com",
+    "score": 5,
+    "label": "benign",
+    "reasons": [
+      "contains_form"
+    ],
+    "features": {
+      "original_url": "https://www.google.com",
+      "scheme": "https",
+      "hostname": "www.google.com",
+      "domain": "google.com",
+      "subdomain": "www",
+      "path": "",
+      "path_len": 0,
+      "path_segments": 0,
+      "query": "",
+      "query_len": 0,
+      "num_query_params": 0,
+      "is_ip": false,
+      "url_len": 22
+    },
+    "whois_age_days": null,
+    "active": {
+      "final_url": "https://www.google.com/",
+      "status_code": 200,
+      "redirect_chain": [
+        "https://www.google.com/"
+      ],
+      "contains_form": true,
+      "error": null
+    }
+  },
+  {
+    "url": "http://login-paypal.example.tk/verify",
+    "score": 18,
+    "label": "suspicious",
+    "reasons": [
+      "keyword_login",
+      "keyword_verify",
+      "keyword_paypal",
+      "active_check_error"
+    ],
+    "features": {
+      "original_url": "http://login-paypal.example.tk/verify",
+      "scheme": "http",
+      "hostname": "login-paypal.example.tk",
+      "domain": "example.tk",
+      "subdomain": "login-paypal",
+      "path": "/verify",
+      "path_len": 7,
+      "path_segments": 1,
+      "query": "",
+      "query_len": 0,
+      "num_query_params": 0,
+      "is_ip": false,
+      "url_len": 37
+    },
+    "whois_age_days": null,
+    "active": {
+      "error": "HTTPConnectionPool(host='login-paypal.example.tk', port=80): Max retries exceeded with url: /verify (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7736728fe2d0>: Failed to resolve 'login-paypal.example.tk' ([Errno -2] Name or service not known)\"))"
+    }
+  },
+  {
+    "url": "http://192.0.2.1/secure-login",
+    "score": 38,
+    "label": "phishing",
+    "reasons": [
+      "ip_in_host",
+      "keyword_login",
+      "keyword_secure",
+      "active_check_error"
+    ],
+    "features": {
+      "original_url": "http://192.0.2.1/secure-login",
+      "scheme": "http",
+      "hostname": "192.0.2.1",
+      "domain": "192.0.2.1",
+      "subdomain": "",
+      "path": "/secure-login",
+      "path_len": 13,
+      "path_segments": 1,
+      "query": "",
+      "query_len": 0,
+      "num_query_params": 0,
+      "is_ip": true,
+      "url_len": 29
+    },
+    "whois_age_days": null,
+    "active": {
+      "error": "HTTPConnectionPool(host='192.0.2.1', port=80): Max retries exceeded with url: /secure-login (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x773673491d60>, 'Connection to 192.0.2.1 timed out. (connect timeout=6)'))"
+    }
+  }
+]
