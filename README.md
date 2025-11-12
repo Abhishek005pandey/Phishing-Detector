@@ -1,6 +1,6 @@
 # 🧠 Phishing URL Detection System
-> http://56.228.3.36:5000/
-> A machine learning-based project to detect phishing URLs using Python, Flask, and Regex analysis — built and deployed on Ubuntu.
+> Live demo: http://56.228.3.36:5000/  
+> A machine learning-based project to detect phishing URLs using Python, Flask, and Regex analysis — built and deployed on Ubuntu (AWS EC2).
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.x-green)
@@ -11,45 +11,44 @@
 ---
 
 ## 🚀 Overview
-The **Phishing URL Detector** is a security project that detects malicious (phishing) URLs by analyzing their structure, tokens, WHOIS data, and active behavior.  
+The **Phishing URL Detector** detects malicious (phishing) URLs by analyzing structure, tokens, WHOIS data, and active behavior.  
 It combines **heuristics**, **regex patterns**, and **machine learning** (Random Forest) to classify URLs as:
 - ✅ *Benign (Safe)*
 - ⚠️ *Suspicious*
 - 🚨 *Phishing (Malicious)*
 
-The project includes:
-- A **Python CLI tool**
-- A **Flask web API**
-- A **Web Interface** (accessible via browser)
-- Optional integration for **Android apps**
+This repository contains:
+- A **Python CLI** analyzer
+- A **Flask** web API (`/predict` and `/analyze`)
+- A simple **Web UI** for interactive testing
+- Optional instructions to deploy on **AWS EC2**
 
 ---
 
 ## 🧩 Tech Stack
 | Category | Tools / Libraries |
-|-----------|-------------------|
+|---|---|
 | Language | Python 3.12 |
 | Framework | Flask |
-| Machine Learning | Scikit-learn (RandomForestClassifier) |
-| Parsing & Analysis | Regex, urllib, tldextract |
-| WHOIS Lookup | python-whois |
-| Frontend | HTML, JavaScript (fetch API) |
-| Environment | Ubuntu 22.04 (VM on VMware Workstation) |
+| Machine Learning | scikit-learn (RandomForestClassifier) |
+| Parsing & Analysis | Regex, `urllib`, `tldextract` |
+| WHOIS Lookup | `python-whois` |
+| Frontend | HTML + JavaScript (fetch API) |
+| Environment | Ubuntu / AWS EC2 |
 | Version Control | Git + GitHub |
 
 ---
 
 ## 🧠 Features
-✅ Extracts and analyzes URL components (domain, subdomain, query params)  
-✅ Heuristic detection for phishing keywords (`login`, `secure`, `update`, etc.)  
-✅ Detects IP-based URLs, multiple redirects, suspicious patterns  
-✅ WHOIS domain age lookup (to flag newly created domains)  
-✅ Machine Learning classifier (Random Forest)  
-✅ Flask REST API for web integration  
-✅ Interactive CLI for terminal analysis  
-✅ Web UI to test links in browser  
+- Extracts and analyzes URL components (domain, subdomain, path, query)  
+- Heuristic detection for phishing keywords (`login`, `secure`, `update`, etc.)  
+- Detects IP-based hosts, long hex strings, multiple redirects, forms on pages  
+- WHOIS domain-age lookup to flag newly created domains  
+- ML classifier (Random Forest) for improved accuracy  
+- Flask REST API for integration (`/predict`)  
+- Interactive CLI (`src/main.py`)  
+- Web UI (under `src/web/index.html`) to test URLs in-browser
 
 ---
 
-## 🏗️ Project Structure
-
+## 📁 Project structure (short)
